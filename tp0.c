@@ -46,8 +46,17 @@ ConfiguracionConjunto* configurarConjunto(Comando* *comandos) {
  * *****************************************************************/
 
 ConjuntoDeJulia* simularConjunto(ConfiguracionConjunto* configuracion) {
-
-
+/*
+	para cada pixel $p {
+		$z = complejo asociado a $p;
+		for ($i = 0; $i < $N - 1; ++$i) {
+		if (abs($z) > 2)
+			reak;
+			$z = $z * $z + $c;
+		}
+		dibujar el punto p con brillo $i;
+	}
+*/
 }
 
 /* ******************************************************************
