@@ -113,27 +113,40 @@ double moduloAlCuadrado(NumeroComplejo unNumero){
 
 unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
 	NumeroComplejo iComplejo = numeroComplejo;
-	unsigned char i;
-	for (i = 0; i < 255; i++) {
-		if (moduloAlCuadrado(iComplejo) > 4)
-			break;
+	unsigned char i = 0;
+	while(i < 255 && moduloAlCuadrado(iComplejo) <= 4){
 		iComplejo = sumar(multiplicar(iComplejo, iComplejo),c);
+		i++;
 	}
 	return i;
 }
 
-ConjuntoDeJulia* simularConjunto(ConfiguracionConjunto* configuracion) {
-/*
-	para cada pixel $p {
-		$z = complejo asociado a $p;
-		for ($i = 0; $i < $N - 1; ++$i) {
-		if (abs($z) > 2)
-			reak;
-			$z = $z * $z + $c;
-		}
-		dibujar el punto p con brillo $i;
-	}
+/* Si la resolucion es un numero impar en ancho y alto,
+ * el centro que se le da es el centro de un pixel y todo funciona adecuadamente.
+ * Si es par, habria que hacer un ajuste de sumarle medio pixel en la coordenada
+ * correcta. Por ahora lo dejo asi.
+ * Por ahora no devuelve el conjunto
 */
+ConjuntoDeJulia* simularConjunto(ConfiguracionConjunto* configuracion) {
+
+	NumeroComplejo unNumero;
+	NumeroComplejo centro = configuracion->centro;
+	unsigned char brillo;
+	double incrementoParteReal, incrementoParteImaginaria, altoPixel, anchoPixel;
+	int anchoRes = configuracion->resolucion.ancho;
+	int altoRes = configuracion->resolucion.alto;
+
+	incrementoParteReal = configuracion->dimension.ancho / anchoRes;
+	incrementoParteImaginaria = configuracion->dimension.alto / altoRes;
+
+	for(int i = -anchoRes/2; i <= anchoRes/2; i++){
+		for(int j = -altoRes/2; j <= altoRes/2; j++){
+			unNumero.parteReal = centro.parteReal + i*incrementoParteReal;
+			unNumero.parteImaginaria = centro.parteImaginaria + j*incrementoParteImaginaria;
+			brillo = calcularBrillo(unNumero, configuracion->parametroC);
+			//Aca ya podriamos guardar este punto en el archivo de imagen
+		}
+	}
 }
 
 /* ******************************************************************
