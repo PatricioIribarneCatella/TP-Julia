@@ -132,7 +132,7 @@ ConjuntoDeJulia* simularConjunto(ConfiguracionConjunto* configuracion) {
 	NumeroComplejo unNumero;
 	NumeroComplejo centro = configuracion->centro;
 	unsigned char brillo;
-	double incrementoParteReal, incrementoParteImaginaria, altoPixel, anchoPixel;
+	double incrementoParteReal, incrementoParteImaginaria;
 	int anchoRes = configuracion->resolucion.ancho;
 	int altoRes = configuracion->resolucion.alto;
 
