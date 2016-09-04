@@ -15,18 +15,9 @@
 #define HEADER_IMAGEN "P2"
 #define MAXIMA_INTENSIDAD_PIXEL 255
 
-#define MAX_FILAS 480
-#define MAX_COLUMNAS 640
-
 /* ******************************************************************
  *                  Definición de los tipos de datos
  * *****************************************************************/
-
-typedef struct Matriz {
-	int cantidadFilas;
-	int cantidadColumnas;
-	int *intensidadPixeles[MAX_FILAS][MAX_COLUMNAS];
-}Matriz;
 
 typedef struct NumeroComplejo {
 	double parteReal;
@@ -53,13 +44,9 @@ typedef struct ConfiguracionConjunto {
 	Dimension dimension; // Tamaño de la porción de plano complejo
 	NumeroComplejo centro;
 	NumeroComplejo parametroC;
+	char* nombreImagen;
 	bool salidaImagen;
 }ConfiguracionConjunto;
-
-typedef struct ConjuntoDeJulia {
-	Matriz* pixeles;
-	bool salidaImagen;
-}ConjuntoDeJulia;
 
 
 /* ******************************************************************
@@ -68,7 +55,7 @@ typedef struct ConjuntoDeJulia {
 
 Comando* *leerDatos(int argc, char const *argv[]) {
 
-
+	return NULL;
 }
 
 /* ******************************************************************
@@ -77,9 +64,8 @@ Comando* *leerDatos(int argc, char const *argv[]) {
 
 ConfiguracionConjunto* configurarConjunto(Comando* *comandos) {
 
-
+	return NULL;
 }
-
 
 /* ******************************************************************
  *                        Funciones de operacion con complejos
@@ -127,35 +113,67 @@ unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
  * correcta. Por ahora lo dejo asi.
  * Por ahora no devuelve el conjunto
 */
-ConjuntoDeJulia* simularConjunto(ConfiguracionConjunto* configuracion) {
+void simularConjunto(ConfiguracionConjunto* configuracion) {
 
-	NumeroComplejo unNumero;
-	NumeroComplejo centro = configuracion->centro;
-	unsigned char brillo;
-	double incrementoParteReal, incrementoParteImaginaria;
+	FILE* imagen;
+
 	int anchoRes = configuracion->resolucion.ancho;
 	int altoRes = configuracion->resolucion.alto;
+
+	if (configuracion->salidaImagen) {
+
+		imagen = fopen(configuracion->nombreImagen, "w");
+
+		fprintf(imagen, "%s\n", HEADER_IMAGEN);
+		fprintf(imagen, "%d %d\n", anchoRes, altoRes);
+		fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
+
+	} else {
+
+		printf("%s\n", HEADER_IMAGEN);
+		printf("%d %d\n", anchoRes, altoRes);
+		printf("%d\n", MAXIMA_INTENSIDAD_PIXEL);
+	}
+
+	unsigned char brillo;
+	NumeroComplejo unNumero;
+	double incrementoParteReal, incrementoParteImaginaria;
+
+	NumeroComplejo centro = configuracion->centro;
 
 	incrementoParteReal = configuracion->dimension.ancho / anchoRes;
 	incrementoParteImaginaria = configuracion->dimension.alto / altoRes;
 
 	for(int i = -anchoRes/2; i <= anchoRes/2; i++){
+		
 		for(int j = -altoRes/2; j <= altoRes/2; j++){
 			unNumero.parteReal = centro.parteReal + i*incrementoParteReal;
 			unNumero.parteImaginaria = centro.parteImaginaria + j*incrementoParteImaginaria;
 			brillo = calcularBrillo(unNumero, configuracion->parametroC);
-			//Aca ya podriamos guardar este punto en el archivo de imagen
+			
+			if (configuracion->salidaImagen) {
+
+				fprintf(imagen, "%d ", brillo);
+
+			} else {
+
+				printf("%d ", brillo);
+			}
+		}
+
+		if (configuracion->salidaImagen) {
+
+			fprintf(imagen, "%s\n", "");
+
+		} else {
+
+			printf("\n");
 		}
 	}
-}
 
-/* ******************************************************************
- *                 Genera la salida correspondiente
- * *****************************************************************/
-
-void generarSalidaDeLaSimulacion(ConjuntoDeJulia* conjuntoJulia) {
-
-
+	if (configuracion->salidaImagen) {
+		fclose(imagen);
+	}
 }
 
 /* ******************************************************************
@@ -172,16 +190,10 @@ void destruirConfiguracionConjunto(ConfiguracionConjunto* configuracion) {
 
 }
 
-void destruirConjuntoDeJulia(ConjuntoDeJulia* conjuntoDeJulia) {
-
-
-}
-
-void destruirDatos(Comando* *comandos, ConfiguracionConjunto* configuracion, ConjuntoDeJulia* conjuntoDeJulia) {
+void destruirDatos(Comando* *comandos, ConfiguracionConjunto* configuracion) {
 
 	destruirComandos(comandos);
 	destruirConfiguracionConjunto(configuracion);
-	destruirConjuntoDeJulia(conjuntoDeJulia);
 }
 
 /* ******************************************************************
@@ -201,11 +213,9 @@ void simulacionJulia(int argc, char const *argv[]) {
 
 		ConfiguracionConjunto* configuracion = configurarConjunto(comandos);
 
-		ConjuntoDeJulia* conjuntoDeJulia = simularConjunto(configuracion);
+		simularConjunto(configuracion);
 
-		generarSalidaDeLaSimulacion(conjuntoDeJulia);
-
-		destruirDatos(comandos, configuracion, conjuntoDeJulia);
+		destruirDatos(comandos, configuracion);
 	}
 }
 
