@@ -39,6 +39,11 @@ typedef struct Comando {
 	char* dato;
 }Comando;
 
+typedef struct Commandos {
+	Comando* *datos;
+	int cantidadComandos;
+}Comandos;
+
 typedef struct ConfiguracionConjunto {
 	Resolucion resolucion; // Resolución de la imagen a generar
 	Dimension dimension; // Tamaño de la porción de plano complejo
@@ -53,7 +58,7 @@ typedef struct ConfiguracionConjunto {
  *                        Función de Lectura
  * *****************************************************************/
 
-Comando* *leerDatos(int argc, char const *argv[]) {
+Comandos* leerDatos(int argc, char const *argv[]) {
 
 	return NULL;
 }
@@ -62,7 +67,7 @@ Comando* *leerDatos(int argc, char const *argv[]) {
  *     Configuración de las dimensiones de la imagen a generar
  * *****************************************************************/
 
-ConfiguracionConjunto* configurarConjunto(Comando* *comandos) {
+ConfiguracionConjunto* configurarConjunto(Comandos* comandos) {
 
 	return NULL;
 }
@@ -180,7 +185,7 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
  *                 Funciones de destrucción de datos
  * *****************************************************************/
 
-void destruirComandos(Comando* *comandos) {
+void destruirComandos(Comandos* comandos) {
 
 
 }
@@ -190,7 +195,7 @@ void destruirConfiguracionConjunto(ConfiguracionConjunto* configuracion) {
 
 }
 
-void destruirDatos(Comando* *comandos, ConfiguracionConjunto* configuracion) {
+void destruirDatos(Comandos* comandos, ConfiguracionConjunto* configuracion) {
 
 	destruirComandos(comandos);
 	destruirConfiguracionConjunto(configuracion);
@@ -202,11 +207,15 @@ void destruirDatos(Comando* *comandos, ConfiguracionConjunto* configuracion) {
 
 void simulacionJulia(int argc, char const *argv[]) {
 
-	Comando* *comandos = leerDatos(argc, argv);
+	Comandos* comandos = leerDatos(argc, argv);
 
-	if (strcmp(comandos[0]->tipo, ERROR) == 0) {
+	Comando* *datos = comandos->datos;
 
-		printf("%s\n", comandos[0]->dato);
+	Comando* comando = datos[0];
+
+	if (strcmp(comando->tipo, ERROR) == 0) {
+
+		printf("%s\n", comando->dato);
 		destruirComandos(comandos);
 
 	} else {
