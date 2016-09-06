@@ -60,6 +60,12 @@ typedef struct ConfiguracionConjunto {
 
 Comandos* leerDatos(int argc, char const *argv[]) {
 
+	Comandos* comandos = malloc(sizeof(Comandos));
+
+	if (!comandos) return NULL;
+
+	/*Implementar la validación de los datos de entrada*/
+
 	return NULL;
 }
 
@@ -69,7 +75,16 @@ Comandos* leerDatos(int argc, char const *argv[]) {
 
 ConfiguracionConjunto* configurarConjunto(Comandos* comandos) {
 
-	return NULL;
+	ConfiguracionConjunto* configuracion = malloc(sizeof(ConfiguracionConjunto));
+
+	if (!configuracion) return NULL;
+
+	for (int i = 0; i < comandos->cantidadComandos; i++) {
+
+		/*A partir de los comandos ya guardados, obtener la información para la configuración*/
+	}
+
+	return configuracion;
 }
 
 /* ******************************************************************
