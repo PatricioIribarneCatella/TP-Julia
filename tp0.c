@@ -187,12 +187,26 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
 
 void destruirComandos(Comandos* comandos) {
 
+	Comando* *datos = comandos->datos;
 
+	for (int i = 0; i < comandos->cantidadComandos; i++) {
+
+		Comando* comando = datos[i];
+		free(comando->tipo);
+		free(comando->dato);
+		free(comando);
+	}
+
+	free(datos);
+
+	free(comandos);
 }
 
 void destruirConfiguracionConjunto(ConfiguracionConjunto* configuracion) {
 
+	free(configuracion->nombreImagen);
 
+	free(configuracion);
 }
 
 void destruirDatos(Comandos* comandos, ConfiguracionConjunto* configuracion) {
