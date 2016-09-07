@@ -4,8 +4,12 @@ Simulación de los conjuntos de Julia
 
 **Compilación**
 
-$ gcc -Wall -pedantic tp0.c -o tp0
+$ make
 
 **Ejecución**
 
 $ ./tp0
+
+**Pruebas**
+
+$ bash pruebas.sh
