@@ -127,12 +127,6 @@ unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
 	return i;
 }
 
-/* Si la resolucion es un numero impar en ancho y alto,
- * el centro que se le da es el centro de un pixel y todo funciona adecuadamente.
- * Si es par, habria que hacer un ajuste de sumarle medio pixel en la coordenada
- * correcta. Por ahora lo dejo asi.
- * Por ahora no devuelve el conjunto
-*/
 void simularConjunto(ConfiguracionConjunto* configuracion) {
 
 	FILE* imagen;
@@ -157,43 +151,36 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
 
 	unsigned char brillo;
 	NumeroComplejo unNumero;
-	double incrementoParteReal, incrementoParteImaginaria;
+	double incrementoParteReal, incrementoParteImaginaria, anchoPixel, altoPixel;
 
 	NumeroComplejo centro = configuracion->centro;
 
 	incrementoParteReal = configuracion->dimension.ancho / anchoRes;
 	incrementoParteImaginaria = configuracion->dimension.alto / altoRes;
+	anchoPixel = anchoRes/configuracion->dimension.ancho;
+	altoPixel = altoRes/configuracion->dimension.alto;
 
-	for(int i = -anchoRes/2; i <= anchoRes/2; i++){
+	for(double i = -anchoRes/2; i <= anchoRes/2; i++){
 		
-		for(int j = -altoRes/2; j <= altoRes/2; j++){
-			unNumero.parteReal = centro.parteReal + i*incrementoParteReal;
-			unNumero.parteImaginaria = centro.parteImaginaria + j*incrementoParteImaginaria;
+		for(double j = -altoRes/2; j <= altoRes/2; j++){
+			unNumero.parteReal = centro.parteReal + i*incrementoParteReal + anchoPixel;
+			unNumero.parteImaginaria = centro.parteImaginaria + j*incrementoParteImaginaria + altoPixel;
 			brillo = calcularBrillo(unNumero, configuracion->parametroC);
 			
-			if (configuracion->salidaImagen) {
-
+			if (configuracion->salidaImagen)
 				fprintf(imagen, "%d ", brillo);
-
-			} else {
-
+			else
 				printf("%d ", brillo);
-			}
 		}
 
-		if (configuracion->salidaImagen) {
-
+		if (configuracion->salidaImagen)
 			fprintf(imagen, "%s\n", "");
-
-		} else {
-
+		else
 			printf("\n");
-		}
 	}
 
-	if (configuracion->salidaImagen) {
+	if (configuracion->salidaImagen)
 		fclose(imagen);
-	}
 }
 
 /* ******************************************************************
