@@ -21,8 +21,8 @@
 #define RESOLUCION_ALTO_DEFAULT 480
 #define CENTRO_REAL_DEFAULT 0
 #define CENTRO_IMAGINARIO_DEFAULT 0
-#define C_REAL_DEFAULT 0
-#define C_IMAGINARIO_DEFAULT 0
+const double C_REAL_DEFAULT = 0.285;
+const double C_IMAGINARIO_DEFAULT = 0.01; 
 #define DIMENSION_ANCHO_DEFAULT 4
 #define DIMENSION_ALTO_DEFAULT 4
 
@@ -44,8 +44,8 @@ typedef struct Resolucion {
 } Resolucion;
 
 typedef struct Dimension {
-	float ancho;
-	float alto;
+	double ancho;
+	double alto;
 } Dimension;
 
 typedef struct ConfiguracionConjunto {
@@ -295,6 +295,7 @@ double moduloAlCuadrado(NumeroComplejo unNumero){
  * *****************************************************************/
 
 unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
+    
     NumeroComplejo iComplejo = numeroComplejo;
     unsigned char i = 0;
     while(i < 255 && moduloAlCuadrado(iComplejo) <= 4){
@@ -304,9 +305,41 @@ unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
     return i;
 }
 
+NumeroComplejo transformarPixel(int i, int j, ConfiguracionConjunto* configuracion) {
+
+	NumeroComplejo numero;
+	NumeroComplejo zInicio;
+	NumeroComplejo centro = configuracion->centro;
+
+	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
+
+	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
+	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
+
+	/*Me posiciono en la esquina superior izquierda con respecto al centro de la imagen*/
+
+	zInicio.parteReal = centro.parteReal - configuracion->dimension.ancho/2;
+	zInicio.parteImaginaria = centro.parteImaginaria + configuracion->dimension.alto/2;
+
+	double deltaAnchoPixel = anchoPixel/2;
+	double deltaAltoPixel = altoPixel/2;
+
+	/*Me centro en punto medio del píxel*/
+
+	zInicio.parteReal = zInicio.parteReal + deltaAnchoPixel;
+	zInicio.parteImaginaria = zInicio.parteImaginaria - deltaAltoPixel;
+
+	/*Se incrementa el píxel teniendo en cuenta en cual se está*/
+
+	numero.parteReal = zInicio.parteReal + i*anchoPixel;
+	numero.parteImaginaria = zInicio.parteImaginaria - j*altoPixel;
+
+	return numero;
+}
+
 void simularConjunto(ConfiguracionConjunto* configuracion) {
 
-    FILE* imagen;
+	FILE* imagen;
 
     int anchoRes = configuracion->resolucion.ancho;
     int altoRes = configuracion->resolucion.alto;
@@ -326,38 +359,34 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
         printf("%d\n", MAXIMA_INTENSIDAD_PIXEL);
     }
 
-    unsigned char brillo;
-    NumeroComplejo unNumero;
-    double incrementoParteReal, incrementoParteImaginaria, anchoPixel, altoPixel;
+    int brillo;
+    NumeroComplejo complejoAsociadoAPixel;
+    NumeroComplejo c = configuracion->c;
 
-    NumeroComplejo centro = configuracion->centro;
+    for (int i = 0; i < altoRes; i++) {
 
-    incrementoParteReal = configuracion->dimension.ancho / anchoRes;
-    incrementoParteImaginaria = configuracion->dimension.alto / altoRes;
-    anchoPixel = anchoRes/configuracion->dimension.ancho;
-    altoPixel = altoRes/configuracion->dimension.alto;
+    	for (int j = 0; j < anchoRes; j++) {
 
-    for(double i = -anchoRes/2; i <= anchoRes/2; i++){
+    		complejoAsociadoAPixel = transformarPixel(i, j, configuracion);
+    		brillo = calcularBrillo(complejoAsociadoAPixel, c);
 
-        for(double j = -altoRes/2; j <= altoRes/2; j++){
-            unNumero.parteReal = centro.parteReal + i*incrementoParteReal + anchoPixel;
-            unNumero.parteImaginaria = centro.parteImaginaria + j*incrementoParteImaginaria + altoPixel;
-            brillo = calcularBrillo(unNumero, configuracion->c);
-
-            if (!configuracion->salidaEstandar)
+    		if (!configuracion->salidaEstandar) {
                 fprintf(imagen, "%d ", brillo);
-            else
+    		} else {
                 printf("%d ", brillo);
-        }
+    		}
+    	}
 
-        if (!configuracion->salidaEstandar)
+    	if (!configuracion->salidaEstandar) {
             fprintf(imagen, "%s\n", "");
-        else
-            printf("\n");
+    	} else {
+    		printf("\n");
+    	}
     }
 
-    if (!configuracion->salidaEstandar)
+    if (!configuracion->salidaEstandar) {
         fclose(imagen);
+    }
 }
 
 /* ******************************************************************
