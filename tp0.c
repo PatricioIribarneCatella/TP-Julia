@@ -392,13 +392,15 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
         imagen = fopen(configuracion->nombreImagen, "w");
 
         fprintf(imagen, "%s\n", HEADER_IMAGEN);
-        fprintf(imagen, "%d %d\n", anchoRes, altoRes);
+        fprintf(imagen, "%d\n", anchoRes);
+        fprintf(imagen, "%d\n", altoRes);
         fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
 
     } else {
 
         printf("%s\n", HEADER_IMAGEN);
-        printf("%d %d\n", anchoRes, altoRes);
+        printf("%d\n", anchoRes);
+        printf("%d\n", altoRes);
         printf("%d\n", MAXIMA_INTENSIDAD_PIXEL);
     }
 
