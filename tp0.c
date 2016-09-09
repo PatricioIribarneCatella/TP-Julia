@@ -58,7 +58,7 @@ typedef struct ConfiguracionConjunto {
 } ConfiguracionConjunto;
 
 /* ******************************************************************
- *                          Manual
+ *                             Manual
  * *****************************************************************/
 
 void printUso() {
@@ -72,7 +72,7 @@ void printUso() {
 }
 
 /* ******************************************************************
- *                        Validación
+ *                            Validación
  * *****************************************************************/
 
 bool isNumber(char* str, size_t len){
@@ -80,6 +80,42 @@ bool isNumber(char* str, size_t len){
 		if (!isdigit(str[i])) {
 			return false;
 		}
+	return true;
+}
+
+bool isFloatNumber(char* str, size_t len) {
+
+	int idx = 0;
+	int canPoints = 0;
+	int canDig = 0;
+	int canNums = 0;
+
+	while (idx < len){
+		if (isdigit(str[idx])){
+			canDig++;
+		}
+		else{
+			if (str[idx] == '.'){
+				//si no tiene números antes del punto, es inválido
+				if (canDig == 0)
+					return false;
+				else{	//sino se cuenta la cantidad de números
+					canNums++;
+					canDig = 0;	//se inicializa el contador de dígitos
+				}
+				canPoints++;
+			}
+			else //si no es un dígito ni un punto, es un caracter no admitido
+				return false;
+		}
+		idx++;
+	}
+	if (canDig > 0)
+		canNums++;
+	if (canNums > 2)	//si tiene más de 2 números es inválido
+		return false;
+	if (canPoints > 1)	//si tiene más de un punto es inválido
+		return false;
 	return true;
 }
 
@@ -107,7 +143,7 @@ bool complejoValido(NumeroComplejo complejo, char* errorMsg){
 }
 
 /* ******************************************************************
- *                         Lectura
+ *                            Lectura
  * *****************************************************************/
 
 NumeroComplejo numeroComplejoInvalido(){
@@ -116,11 +152,13 @@ NumeroComplejo numeroComplejoInvalido(){
     return invalido;
 }
 
-NumeroComplejo stringANumeroComplejo(const char* complejoStr){
+NumeroComplejo stringANumeroComplejo(const char* complejoStr) {
+
+	printf("%s\n", complejoStr);
+
 	NumeroComplejo complejo;
     //Valido
-    if (!(complejoStr && *complejoStr &&
-            complejoStr[strlen(complejoStr) - 1] == 'i')){
+    if (!(complejoStr && *complejoStr && complejoStr[strlen(complejoStr) - 1] == 'i')){
         return numeroComplejoInvalido();
     }
 
@@ -136,6 +174,7 @@ NumeroComplejo stringANumeroComplejo(const char* complejoStr){
 	int signoReal = 1;
 	int signoImaginario = 1;
 	int i = 0, cuentaMas = 0, cuentaMenos = 0;
+
 	for (i = 0; str[i]; i++) {
 		cuentaMas += (str[i] == '+');
 		cuentaMenos += (str[i] == '-');
@@ -144,6 +183,7 @@ NumeroComplejo stringANumeroComplejo(const char* complejoStr){
     if (cuentaMas + cuentaMenos != 2) {
         return numeroComplejoInvalido();
     }
+
 	if (cuentaMas == 0) {
 		signoImaginario = -1;
 		signoReal = -1;
@@ -154,13 +194,15 @@ NumeroComplejo stringANumeroComplejo(const char* complejoStr){
 
 	//Parseo
 	char* tmp;
+
 	tmp = strtok(str, " +-i");
-	if (!isNumber(tmp, strlen(tmp))) return numeroComplejoInvalido();
+	if (!isFloatNumber(tmp, strlen(tmp))) return numeroComplejoInvalido();
 	else {
         complejo.parteReal = signoReal*atof(tmp);
     }
+
 	tmp = strtok(NULL, " +-i");
-	if (!isNumber(tmp, strlen(tmp))) return numeroComplejoInvalido();
+	if (!isFloatNumber(tmp, strlen(tmp))) return numeroComplejoInvalido();
 	else {
         complejo.parteImaginaria = signoImaginario*atof(tmp);
     }
@@ -267,7 +309,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 }
 
 /* ******************************************************************
- *                        Funciones de operacion con complejos
+ *               Funciones de operacion con complejos
  * *****************************************************************/
 
 NumeroComplejo sumar(NumeroComplejo unNumero, NumeroComplejo otroNumero){
