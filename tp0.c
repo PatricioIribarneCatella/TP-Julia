@@ -154,8 +154,6 @@ NumeroComplejo numeroComplejoInvalido(){
 
 NumeroComplejo stringANumeroComplejo(const char* complejoStr) {
 
-	printf("%s\n", complejoStr);
-
 	NumeroComplejo complejo;
     //Valido
     if (!(complejoStr && *complejoStr && complejoStr[strlen(complejoStr) - 1] == 'i')){
@@ -211,6 +209,7 @@ NumeroComplejo stringANumeroComplejo(const char* complejoStr) {
 }
 
 ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
+	
 	//Configuracion default
 	ConfiguracionConjunto* configuracion = malloc(sizeof(ConfiguracionConjunto));
 	strcpy(configuracion->nombreImagen, "");
