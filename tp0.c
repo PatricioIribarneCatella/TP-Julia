@@ -22,7 +22,7 @@
 #define CENTRO_REAL_DEFAULT 0
 #define CENTRO_IMAGINARIO_DEFAULT 0
 const double C_REAL_DEFAULT = 0.285;
-const double C_IMAGINARIO_DEFAULT = 0.01; 
+const double C_IMAGINARIO_DEFAULT = -0.01; 
 #define DIMENSION_ANCHO_DEFAULT 4
 #define DIMENSION_ALTO_DEFAULT 4
 
@@ -171,6 +171,7 @@ NumeroComplejo stringANumeroComplejo(const char* complejoStr){
 ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 	//Configuracion default
 	ConfiguracionConjunto* configuracion = malloc(sizeof(ConfiguracionConjunto));
+	strcpy(configuracion->nombreImagen, "");
 	Resolucion resolucion;
 	resolucion.ancho = RESOLUCION_ANCHO_DEFAULT;
 	resolucion.alto = RESOLUCION_ALTO_DEFAULT;
@@ -248,7 +249,8 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 			} else break;
 		} else break;
 	}
-	if (*configuracion->nombreImagen == '-'){
+
+	if (strcmp(configuracion->nombreImagen,"-") == 0){
 		configuracion->salidaEstandar = true;
 	}
 
