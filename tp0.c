@@ -66,7 +66,7 @@ void printUso() {
 				   "-r [resolution]     specify resolution\n"
 				   "-c [complex number] specify center\n"
 				   "-C [complex number] specify c parameter\n"
-				   "-W [width]          specify width of output\n"
+				   "-w [width]          specify width of output\n"
 				   "-H [hight]          specify height of output\n"
 				   "-o [filename].pgm   specify file name, or type '-' for standard output\n");
 }
@@ -270,13 +270,13 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 		} else if (strcmp(argv[i], COMANDO_W) == 0) {
 			i++;
 			if (i < argc){
-				if (!isdigit(argv[i])) break;
+				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) break;
 				else configuracion->dimension.ancho = atof(argv[i]);
 			}
 		} else if (strcmp(argv[i], COMANDO_H) == 0) {
 			i++;
 			if (i < argc){
-				if (!isdigit(argv[i])) break;
+				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) break;
 				else configuracion->dimension.alto = atof(argv[i]);
 			}
 		} else if (strcmp(argv[i], COMANDO_OUTPUT) == 0) {
