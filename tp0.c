@@ -348,14 +348,9 @@ unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
     return i;
 }
 
-NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, ConfiguracionConjunto* configuracion) {
+NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, double anchoPixel, double altoPixel) {
 
 	NumeroComplejo numero;
-
-	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
-
-	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
-	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
 
 	/*Se incrementa el píxel teniendo en cuenta en cual se está*/
 
@@ -421,11 +416,16 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
 
     NumeroComplejo zInicio = obtenerZInicio(configuracion);
 
+	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
+
+	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
+	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
+
     for (int i = 0; i < altoRes; i++) {
 
     	for (int j = 0; j < anchoRes; j++) {
 
-    		complejoAsociadoAPixel = transformarPixel(i, j, zInicio, configuracion);
+    		complejoAsociadoAPixel = transformarPixel(i, j, zInicio, anchoPixel, altoPixel);
     		brillo = calcularBrillo(complejoAsociadoAPixel, c);
 
     		if (!configuracion->salidaEstandar) {
