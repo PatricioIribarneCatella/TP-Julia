@@ -356,8 +356,8 @@ NumeroComplejo transformarPixel(int i, int j, ConfiguracionConjunto* configuraci
 
 	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
 
-	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.alto;
-	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.ancho;
+	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
+	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
 
 	/*Me posiciono en la esquina superior izquierda con respecto al centro de la imagen*/
 
@@ -374,8 +374,8 @@ NumeroComplejo transformarPixel(int i, int j, ConfiguracionConjunto* configuraci
 
 	/*Se incrementa el píxel teniendo en cuenta en cual se está*/
 
-	numero.parteReal = zInicio.parteReal + i*anchoPixel;
-	numero.parteImaginaria = zInicio.parteImaginaria - j*altoPixel;
+	numero.parteReal = zInicio.parteReal + j*anchoPixel;
+	numero.parteImaginaria = zInicio.parteImaginaria - i*altoPixel;
 
 	return numero;
 }
