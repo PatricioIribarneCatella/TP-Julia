@@ -348,9 +348,25 @@ unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
     return i;
 }
 
-NumeroComplejo transformarPixel(int i, int j, ConfiguracionConjunto* configuracion) {
+NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, ConfiguracionConjunto* configuracion) {
 
 	NumeroComplejo numero;
+
+	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
+
+	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
+	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
+
+	/*Se incrementa el píxel teniendo en cuenta en cual se está*/
+
+	numero.parteReal = zInicio.parteReal + j*anchoPixel;
+	numero.parteImaginaria = zInicio.parteImaginaria - i*altoPixel;
+
+	return numero;
+}
+
+NumeroComplejo obtenerZInicio(ConfiguracionConjunto* configuracion) {
+
 	NumeroComplejo zInicio;
 	NumeroComplejo centro = configuracion->centro;
 
@@ -372,12 +388,7 @@ NumeroComplejo transformarPixel(int i, int j, ConfiguracionConjunto* configuraci
 	zInicio.parteReal = zInicio.parteReal + deltaAnchoPixel;
 	zInicio.parteImaginaria = zInicio.parteImaginaria - deltaAltoPixel;
 
-	/*Se incrementa el píxel teniendo en cuenta en cual se está*/
-
-	numero.parteReal = zInicio.parteReal + j*anchoPixel;
-	numero.parteImaginaria = zInicio.parteImaginaria - i*altoPixel;
-
-	return numero;
+	return zInicio;
 }
 
 void simularConjunto(ConfiguracionConjunto* configuracion) {
@@ -408,11 +419,13 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
     NumeroComplejo complejoAsociadoAPixel;
     NumeroComplejo c = configuracion->c;
 
+    NumeroComplejo zInicio = obtenerZInicio(configuracion);
+
     for (int i = 0; i < altoRes; i++) {
 
     	for (int j = 0; j < anchoRes; j++) {
 
-    		complejoAsociadoAPixel = transformarPixel(i, j, configuracion);
+    		complejoAsociadoAPixel = transformarPixel(i, j, zInicio, configuracion);
     		brillo = calcularBrillo(complejoAsociadoAPixel, c);
 
     		if (!configuracion->salidaEstandar) {
