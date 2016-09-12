@@ -8,7 +8,7 @@ $ make
 
 **Ejecución**
 
-$ ./tp0
+$ ./tp0 -r ANCHOxALTO -c a+bi -C c+di -w AnchoRegionPlanoComplejo -H AltoRegionPlanoComplejo -o nombreImagen.pgm
 
 **Pruebas**
 
