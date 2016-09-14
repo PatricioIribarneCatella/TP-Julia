@@ -53,7 +53,7 @@ typedef struct ConfiguracionConjunto {
 	Dimension dimension; // Tamaño de la porción de plano complejo
 	NumeroComplejo centro;
 	NumeroComplejo c;
-	char nombreImagen[PARAMETRO_DEF_LEN];
+	char* nombreImagen;
 	bool salidaEstandar;
 } ConfiguracionConjunto;
 
@@ -212,6 +212,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 	
 	//Configuracion default
 	ConfiguracionConjunto* configuracion = malloc(sizeof(ConfiguracionConjunto));
+	configuracion->nombreImagen = malloc(sizeof(char)*PARAMETRO_DEF_LEN);
 	strcpy(configuracion->nombreImagen, "");
 	Resolucion resolucion;
 	resolucion.ancho = RESOLUCION_ANCHO_DEFAULT;
@@ -282,8 +283,11 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 		} else if (strcmp(argv[i], COMANDO_OUTPUT) == 0) {
 			i++;
 			if (i < argc) {
+				char* nombre = realloc(configuracion->nombreImagen, sizeof(char)*(strlen(argv[i]) + 1));
+				configuracion->nombreImagen =  nombre;
 				strcpy(configuracion->nombreImagen, argv[i]);
                 if (!nombreValido(configuracion->nombreImagen)) {
+                	free(configuracion->nombreImagen);
                     free(configuracion);
                     return NULL;
                 }
@@ -299,6 +303,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 	if (argc == 1 || argc != i ||
             !resolucionValida(configuracion->resolucion) ||
             !nombreValido(configuracion->nombreImagen)){
+		free(configuracion->nombreImagen);
 		free(configuracion);
 		printUso();
 		return NULL;
@@ -452,8 +457,14 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
  * *****************************************************************/
 
 void simulacionJulia(int argc, char const *argv[]) {
+	
 	ConfiguracionConjunto* configuracion = leerDatos(argc, argv);
-    if (configuracion) simularConjunto(configuracion);
+    
+    if (configuracion) {
+    	simularConjunto(configuracion);
+    	free(configuracion->nombreImagen);
+    }
+
     free(configuracion);
 }
 
