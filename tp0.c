@@ -77,7 +77,7 @@ void printUso() {
 
 bool isNumber(char* str, size_t len){
 	for (int i=0; i < len; i++)
-		if (!isdigit(str[i])) {
+		if (!isdigit((int)str[i])) {
 			return false;
 		}
 	return true;
@@ -91,7 +91,7 @@ bool isFloatNumber(char* str, size_t len) {
 	int canNums = 0;
 
 	while (idx < len){
-		if (isdigit(str[idx])){
+		if (isdigit((int)str[idx])){
 			canDig++;
 		}
 		else{
