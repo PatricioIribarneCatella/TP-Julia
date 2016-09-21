@@ -163,7 +163,11 @@ bool nombreValido(char* nombre) {
     	} else {
     		FILE* f = fopen(nombre, "w");
     		if (f == NULL) {
-    			printErrorMessage("fatal: output file can not be open. The directory specified is invalid");
+    			char errorMessage[200] = "fatal: output file can not be open. The filepath: ";
+    			strcat(errorMessage, nombre);
+    			strcat(errorMessage, " ");
+    			strcat(errorMessage, "is invalid");
+    			printErrorMessage(errorMessage);
     			return false;
     		}
     		fclose(f);
