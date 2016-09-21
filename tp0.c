@@ -94,7 +94,11 @@ bool isFloatNumber(char* str, size_t len) {
 	int canDig = 0;
 	int canNums = 0;
 
-	while (idx < len){
+	if (str[idx] == '-') { // Si el número es negativo
+		idx++;
+	}
+
+	while (idx < len) {
 		if (isdigit((int)str[idx])){
 			canDig++;
 		}
@@ -108,9 +112,9 @@ bool isFloatNumber(char* str, size_t len) {
 					canDig = 0;	//se inicializa el contador de dígitos
 				}
 				canPoints++;
-			}
-			else //si no es un dígito ni un punto, es un caracter no admitido
+			} else { //si no es un dígito ni un punto, es un caracter no admitido
 				return false;
+			}
 		}
 		idx++;
 	}
@@ -127,6 +131,14 @@ bool resolucionValida(Resolucion resolucion) {
 	bool valido = resolucion.ancho > 0 && resolucion.alto > 0;
 	if (!valido) {
 		printErrorMessage("fatal: invalid resolution specification. Height and Width must be greater than zero");
+	}
+	return valido;
+}
+
+bool dimensionValida(Dimension dimension) {
+	bool valido = dimension.ancho > 0 && dimension.alto > 0;
+	if (!valido) {
+		printErrorMessage("fatal: invalid image dimensions. Height and Width must be greater than zero");
 	}
 	return valido;
 }
@@ -279,13 +291,19 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 		} else if (strcmp(argv[i], COMANDO_W) == 0) {
 			i++;
 			if (i < argc){
-				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) break;
+				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) {
+					printErrorMessage("fatal: invalid width specification. Must be a valid float number");
+					break;
+				}
 				else configuracion->dimension.ancho = atof(argv[i]);
 			}
 		} else if (strcmp(argv[i], COMANDO_H) == 0) {
 			i++;
 			if (i < argc){
-				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) break;
+				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) {
+					printErrorMessage("fatal: invalid height specification. Must be a valid float number");
+					break;
+				}
 				else configuracion->dimension.alto = atof(argv[i]);
 			}
 		} else if (strcmp(argv[i], COMANDO_OUTPUT) == 0) {
@@ -310,7 +328,8 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
     //Errores de uso
 	if (argc == 1 || argc != i ||
             !resolucionValida(configuracion->resolucion) ||
-            !nombreValido(configuracion->nombreImagen)){
+            !dimensionValida(configuracion->dimension) ||
+            !nombreValido(configuracion->nombreImagen)) {
 		free(configuracion->nombreImagen);
 		free(configuracion);
 		printUso();
