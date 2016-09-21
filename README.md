@@ -2,9 +2,13 @@
 
 Simulación de los conjuntos de Julia
 
-**Compilación**
+**Compilación (Linux/NetBSD)**
 
 $ make
+
+**Generar código Assembly-MIPS en NetBSD**
+
+$ gcc -Wall -std=c99 -O0 -S -mrnames tp0.c
 
 **Ejecución**
 
