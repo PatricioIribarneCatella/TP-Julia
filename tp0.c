@@ -154,18 +154,22 @@ bool dimensionValida(Dimension dimension) {
 }
 
 bool nombreValido(char* nombre) {
-    bool valido;
     if (strcmp(nombre, "-") == 0){
-    	valido = true;
+    	return true;
     } else {
     	if (strcmp(nombre, "") == 0){
     		printErrorMessage("fatal: output file was not specified");
-    		valido = false;
+    		return false;
     	} else {
-    		valido = true;
+    		FILE* f = fopen(nombre, "w");
+    		if (f == NULL) {
+    			printErrorMessage("fatal: output file can not be open. The directory specified is invalid");
+    			return false;
+    		}
+    		fclose(f);
+    		return true;
     	}
     }
-    return valido;
 }
 
 bool complejoValido(NumeroComplejo complejo) {
