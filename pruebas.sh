@@ -18,24 +18,30 @@
 # Prueba 6: Ningún argumento ingresado
 ./tp0
 
-# Prueba 7: Imagen default
+# Prueba 7: Alto de la imágen inválido
+./tp0 -H 3.0.0 -o -
+
+# Prueba 8: Ancho de la imágen negativo
+./tp0 -w -3.0
+
+# Prueba 9: Imagen default
 ./tp0 -o imagenDefault.pgm
 
-# Prueba 8: Imagen con parámtros [r: 1000x1000]
+# Prueba 10: Imagen con parámtros [r: 1000x1000]
 ./tp0 -r 1000x1000 -o imagen1000x1000.pgm
 
-# Prueba 9: Imagen con parámtros [r: 1000x1000, C: -0.75+0.0i, w(ancho): 3, H(alto): 3]
+# Prueba 11: Imagen con parámtros [r: 1000x1000, C: -0.75+0.0i, w(ancho): 3, H(alto): 3]
 ./tp0 -r 1000x1000 -C -0.75+0.0i -w 3.0 -H 3.0 -o imagen1.pgm
 
-# Prueba 10: Imagen con parámtros [r: 1000x1000, C: -0.29799-0.65705i]
+# Prueba 12: Imagen con parámtros [r: 1000x1000, C: -0.29799-0.65705i]
 ./tp0 -r 1000x1000 -C -0.29799-0.65705i -o imagen2.pgm
 
-# Prueba 11: Imagen con parámtros [r: 1000x1000, C: -0.20722+0.64840i]
+# Prueba 13: Imagen con parámtros [r: 1000x1000, C: -0.20722+0.64840i]
 ./tp0 -r 1000x1000 -C -0.20722+0.64840i -o imagen3.pgm
 
-# Prueba 12: Imagen con parámtros [r: 1000x1000, C: -0.45793+0.52736i]
+# Prueba 14: Imagen con parámtros [r: 1000x1000, C: -0.45793+0.52736i]
 ./tp0 -r 1000x1000 -C -0.45793+0.52736i -o imagen4.pgm
 
-# Prueba 13: Imagen con parámtros [r: 1000x1000, C: -1.75473+0i]
+# Prueba 15: Imagen con parámtros [r: 1000x1000, C: -1.75473+0i]
 ./tp0 -r 1000x1000 -C -1.75473+0i -o imagen5.pgm
 

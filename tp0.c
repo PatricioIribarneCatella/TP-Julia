@@ -79,11 +79,21 @@ void printErrorMessage(const char* errorMessage) {
 	printf("%s\n", errorMessage);
 }
 
-bool isNumber(char* str, size_t len){
-	for (int i=0; i < len; i++)
-		if (!isdigit((int)str[i])) {
+bool isNumber(char* str, size_t len) {
+	
+	int idx = 0;
+
+	if (str[idx] == '-') {
+		idx++;
+	}
+
+	while (idx < len) {
+		if (!isdigit((int)str[idx])) {
 			return false;
 		}
+		idx++;
+	}
+
 	return true;
 }
 
