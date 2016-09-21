@@ -68,7 +68,7 @@ void printUso() {
 				   "-C [complex number] specify c parameter\n"
 				   "-w [width]          specify width of output\n"
 				   "-H [hight]          specify height of output\n"
-				   "-o [filename].pgm   specify file name, or type '-' for standard output\n");
+				   "-o [filename]       specify file name, or type '-' for standard output\n");
 }
 
 /* ******************************************************************
@@ -125,14 +125,16 @@ bool resolucionValida(Resolucion resolucion){
 
 bool nombreValido(char* nombre){
     bool valido;
-    if (strcmp(nombre, "-") == 0) valido = true;
-    else {
-        const char* punto = strrchr(nombre, '.');
-        if (!punto || punto == nombre ||
-                strcmp(punto, ".pgm") != 0) valido = false;
-        else valido = true;
+    if (strcmp(nombre, "-") == 0){
+    	valido = true;
+    } else {
+    	if (strcmp(nombre, "") == 0){
+    		printf("%s\n", "fatal: output file was not specified");
+    		valido = false;
+    	} else {
+    		valido = true;
+    	}
     }
-    if (!valido) printf("fatal: cannot open output file.\n");
     return valido;
 }
 
