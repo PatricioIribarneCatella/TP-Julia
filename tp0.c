@@ -75,6 +75,10 @@ void printUso() {
  *                            Validación
  * *****************************************************************/
 
+void printErrorMessage(const char* errorMessage) {
+	printf("%s\n", errorMessage);
+}
+
 bool isNumber(char* str, size_t len){
 	for (int i=0; i < len; i++)
 		if (!isdigit((int)str[i])) {
@@ -119,17 +123,21 @@ bool isFloatNumber(char* str, size_t len) {
 	return true;
 }
 
-bool resolucionValida(Resolucion resolucion){
-	return (resolucion.ancho > 0 && resolucion.alto > 0);
+bool resolucionValida(Resolucion resolucion) {
+	bool valido = resolucion.ancho > 0 && resolucion.alto > 0;
+	if (!valido) {
+		printErrorMessage("fatal: invalid resolution specification. Height and Width must be greater than zero");
+	}
+	return valido;
 }
 
-bool nombreValido(char* nombre){
+bool nombreValido(char* nombre) {
     bool valido;
     if (strcmp(nombre, "-") == 0){
     	valido = true;
     } else {
     	if (strcmp(nombre, "") == 0){
-    		printf("%s\n", "fatal: output file was not specified");
+    		printErrorMessage("fatal: output file was not specified");
     		valido = false;
     	} else {
     		valido = true;
@@ -138,17 +146,15 @@ bool nombreValido(char* nombre){
     return valido;
 }
 
-bool complejoValido(NumeroComplejo complejo, char* errorMsg){
-    bool valido = complejo.parteReal != INT_MAX;
-    if (!valido) puts(errorMsg);
-    return valido;
+bool complejoValido(NumeroComplejo complejo) {
+    return complejo.parteReal != INT_MAX;
 }
 
 /* ******************************************************************
  *                            Lectura
  * *****************************************************************/
 
-NumeroComplejo numeroComplejoInvalido(){
+NumeroComplejo numeroComplejoInvalido() {
     NumeroComplejo invalido;
     invalido.parteReal = INT_MAX;
     return invalido;
@@ -254,8 +260,8 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 			i++;
 			if (i < argc){
 				configuracion->centro = stringANumeroComplejo(argv[i]);
-                if (!complejoValido(configuracion->centro,
-                                    "fatal: invalid center specification.")){
+                if (!complejoValido(configuracion->centro)) {
+                	printErrorMessage("fatal: invalid center specification");
                     free(configuracion);
                     return NULL;
                 }
@@ -264,8 +270,8 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 			i++;
 			if (i < argc){
 				configuracion->c = stringANumeroComplejo(argv[i]);
-                if (!complejoValido(configuracion->c,
-                                    "fatal: invalid c parameter specification.")){
+                if (!complejoValido(configuracion->c)) {
+                	printErrorMessage("fatal: invalid c parameter specification");
                     free(configuracion);
                     return NULL;
                 }

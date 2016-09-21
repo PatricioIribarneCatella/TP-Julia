@@ -6,33 +6,36 @@
 # Prueba 2: Archivo de salida imposible (El archivo no es válido)
 ./tp0 -o /tmp
 
-# Prueba 3: Coordenadas complejas inválidas
+# Prueba 3: Coordenadas complejas inválidas en el centro
 ./tp0 -c 1+3 -o -
 
-# Prueba 4: Argumentos de lı́nea de comando vacı́os
+# Prueba 4: Coordenadas complejas inválidas en el parámetro C
+./tp0 -C 2+4 -o -
+
+# Prueba 5: No se especifica las coordenadas del centro
 ./tp0 -c -o -
 
-# Prueba 5: Ningún argumento ingresado
+# Prueba 6: Ningún argumento ingresado
 ./tp0
 
-# Prueba 6: Imagen default
+# Prueba 7: Imagen default
 ./tp0 -o imagenDefault.pgm
 
-# Prueba 7: Imagen con parámtros [r: 1000x1000]
+# Prueba 8: Imagen con parámtros [r: 1000x1000]
 ./tp0 -r 1000x1000 -o imagen1000x1000.pgm
 
-# Prueba 8: Imagen con parámtros [r: 1000x1000, C: -0.75+0.0i, w(ancho): 3, H(alto): 3]
+# Prueba 9: Imagen con parámtros [r: 1000x1000, C: -0.75+0.0i, w(ancho): 3, H(alto): 3]
 ./tp0 -r 1000x1000 -C -0.75+0.0i -w 3.0 -H 3.0 -o imagen1.pgm
 
-# Prueba 9: Imagen con parámtros [r: 1000x1000, C: -0.29799-0.65705i]
+# Prueba 10: Imagen con parámtros [r: 1000x1000, C: -0.29799-0.65705i]
 ./tp0 -r 1000x1000 -C -0.29799-0.65705i -o imagen2.pgm
 
-# Prueba 10: Imagen con parámtros [r: 1000x1000, C: -0.20722+0.64840i]
+# Prueba 11: Imagen con parámtros [r: 1000x1000, C: -0.20722+0.64840i]
 ./tp0 -r 1000x1000 -C -0.20722+0.64840i -o imagen3.pgm
 
-# Prueba 11: Imagen con parámtros [r: 1000x1000, C: -0.45793+0.52736i]
+# Prueba 12: Imagen con parámtros [r: 1000x1000, C: -0.45793+0.52736i]
 ./tp0 -r 1000x1000 -C -0.45793+0.52736i -o imagen4.pgm
 
-# Prueba 12: Imagen con parámtros [r: 1000x1000, C: -1.75473+0i]
+# Prueba 13: Imagen con parámtros [r: 1000x1000, C: -1.75473+0i]
 ./tp0 -r 1000x1000 -C -1.75473+0i -o imagen5.pgm
 
