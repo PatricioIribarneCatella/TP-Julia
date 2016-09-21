@@ -12,7 +12,7 @@
 #define COMANDO_W "-w"
 #define COMANDO_H "-H"
 #define COMANDO_OUTPUT "-o"
-#define ERROR "e"
+#define COMANDO_V "-v"
 
 #define PARAMETRO_DEF_LEN 15
 #define COMPLEJO_MAX_LEN 20
@@ -63,6 +63,7 @@ typedef struct ConfiguracionConjunto {
 
 void printUso() {
 	printf("Usage: ./tp0 [options]\n"
+				   "-v [version]        shows the program's version (do not use it with the other options)\n"
 				   "-r [resolution]     specify resolution\n"
 				   "-c [complex number] specify center\n"
 				   "-C [complex number] specify c parameter\n"
@@ -270,7 +271,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 	configuracion->dimension = dimension;
 	configuracion->salidaEstandar = false;
 
-	//Configuracion custom
+	//Configuración custom
     int i;
 	for (i = 1; i < argc; i++){
 		if (strcmp(argv[i], COMANDO_R) == 0) {
@@ -336,6 +337,8 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
                     return NULL;
                 }
 			} else break;
+		} else if (strcmp(argv[i], COMANDO_V) == 0) {
+			printErrorMessage("To see the program's version, rerun only with the -v option");
 		} else break;
 	}
 
@@ -503,14 +506,25 @@ void simularConjunto(ConfiguracionConjunto* configuracion) {
 
 void simulacionJulia(int argc, char const *argv[]) {
 	
-	ConfiguracionConjunto* configuracion = leerDatos(argc, argv);
-    
-    if (configuracion) {
-    	simularConjunto(configuracion);
-    	free(configuracion->nombreImagen);
-    }
+	if ((argc != 1) && strcmp(argv[1], COMANDO_V) == 0) {
 
-    free(configuracion);
+		printf("%s\n", "Version: 1.0");
+		printf("Integrantes:\n" 
+					"Mauro Toscano Gonella\n"
+					"Patricio Iribarne Catella\n"
+					"Marcos Vrljicak\n");
+
+	} else {
+
+		ConfiguracionConjunto* configuracion = leerDatos(argc, argv);
+    
+	    if (configuracion) {
+	    	simularConjunto(configuracion);
+	    	free(configuracion->nombreImagen);
+	    }
+
+	    free(configuracion);
+	}
 }
 
 int main(int argc, char const *argv[]) {	
