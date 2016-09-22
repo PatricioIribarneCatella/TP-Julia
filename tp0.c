@@ -146,14 +146,6 @@ bool resolucionValida(Resolucion resolucion) {
 	return valido;
 }
 
-bool dimensionValida(Dimension dimension) {
-	bool valido = dimension.ancho > 0 && dimension.alto > 0;
-	if (!valido) {
-		printErrorMessage("fatal: invalid image dimensions. Height and Width must be greater than zero");
-	}
-	return valido;
-}
-
 bool nombreValido(char* nombre) {
     if (strcmp(nombre, "-") == 0){
     	return true;
@@ -281,11 +273,27 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 				strcpy(parametro, argv[i]);
 				char* valor;
 				valor = strtok(parametro, "x");
-				if (!isNumber(valor, strlen(valor))) break;
+				if (!isNumber(valor, strlen(valor))) {
+					printErrorMessage("fatal: invalid width resolution. Must be a valid integer number");
+					free(configuracion->nombreImagen);
+					free(configuracion);
+                    return NULL;
+				}
 				configuracion->resolucion.ancho = atoi(valor);
 				valor = strtok(NULL, "x");
-				if (!isNumber(valor, strlen(valor))) break;
+				if (!isNumber(valor, strlen(valor))) {
+					printErrorMessage("fatal: invalid height resolution. Must be a valid integer number");
+					free(configuracion->nombreImagen);
+					free(configuracion);
+					return NULL;
+				}
 				configuracion->resolucion.alto = atoi(valor);
+
+				if (!resolucionValida(configuracion->resolucion)) {
+					free(configuracion->nombreImagen);
+					free(configuracion);
+					return NULL;
+				}
 			}
 		} else if (strcmp(argv[i], COMANDO_C) == 0) {
 			i++;
@@ -293,6 +301,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 				configuracion->centro = stringANumeroComplejo(argv[i]);
                 if (!complejoValido(configuracion->centro)) {
                 	printErrorMessage("fatal: invalid center specification");
+                	free(configuracion->nombreImagen);
                     free(configuracion);
                     return NULL;
                 }
@@ -303,6 +312,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 				configuracion->c = stringANumeroComplejo(argv[i]);
                 if (!complejoValido(configuracion->c)) {
                 	printErrorMessage("fatal: invalid c parameter specification");
+                	free(configuracion->nombreImagen);
                     free(configuracion);
                     return NULL;
                 }
@@ -312,18 +322,38 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 			if (i < argc){
 				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) {
 					printErrorMessage("fatal: invalid width specification. Must be a valid float number");
-					break;
+					free(configuracion->nombreImagen);
+					free(configuracion);
+					return NULL;
+				} else {
+					configuracion->dimension.ancho = atof(argv[i]);
 				}
-				else configuracion->dimension.ancho = atof(argv[i]);
+
+				if (configuracion->dimension.ancho < 0) {
+					printErrorMessage("fatal: image width dimension must be a number greater than zero");
+					free(configuracion->nombreImagen);
+					free(configuracion);
+					return NULL;
+				}
 			}
 		} else if (strcmp(argv[i], COMANDO_H) == 0) {
 			i++;
 			if (i < argc){
 				if (!isFloatNumber((char*)argv[i], strlen(argv[i]))) {
 					printErrorMessage("fatal: invalid height specification. Must be a valid float number");
-					break;
+					free(configuracion->nombreImagen);
+					free(configuracion);
+					return NULL;
+				} else {
+					configuracion->dimension.alto = atof(argv[i]);
 				}
-				else configuracion->dimension.alto = atof(argv[i]);
+
+				if (configuracion->dimension.alto < 0) {
+					printErrorMessage("fatal: image height dimension must be a number greater than zero");
+					free(configuracion->nombreImagen);
+					free(configuracion);
+					return NULL;
+				}
 			}
 		} else if (strcmp(argv[i], COMANDO_OUTPUT) == 0) {
 			i++;
@@ -347,10 +377,7 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 	}
 
     //Errores de uso
-	if (argc == 1 || argc != i ||
-            !resolucionValida(configuracion->resolucion) ||
-            !dimensionValida(configuracion->dimension) ||
-            !nombreValido(configuracion->nombreImagen)) {
+	if (argc == 1 || argc != i) {
 		free(configuracion->nombreImagen);
 		free(configuracion);
 		printUso();
