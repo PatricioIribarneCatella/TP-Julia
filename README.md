@@ -1,4 +1,4 @@
-# TP0-Julia
+# TP-Julia
 
 Simulación de los conjuntos de Julia
 
