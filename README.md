@@ -5,6 +5,7 @@ Simulación de los conjuntos de Julia
 **Compilación**
 
 $ make clean
+
 $ make
 
 **Ejecución**
