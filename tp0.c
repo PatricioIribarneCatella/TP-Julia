@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <math.h>
 #include <ctype.h>
 #include <limits.h>
+
+#include "NumeroComplejo.h"
+#include "SimulacionJulia.h"
+#include "tiposDeDatos.h"
 
 #define COMANDO_R "-r"
 #define COMANDO_C "-c"
@@ -21,41 +24,12 @@
 #define RESOLUCION_ALTO_DEFAULT 480
 #define CENTRO_REAL_DEFAULT 0
 #define CENTRO_IMAGINARIO_DEFAULT 0
-const double C_REAL_DEFAULT = 0.285;
-const double C_IMAGINARIO_DEFAULT = -0.01; 
 #define DIMENSION_ANCHO_DEFAULT 4
 #define DIMENSION_ALTO_DEFAULT 4
 
-#define HEADER_IMAGEN "P2"
-#define MAXIMA_INTENSIDAD_PIXEL 255
+const double C_REAL_DEFAULT = 0.285;
+const double C_IMAGINARIO_DEFAULT = -0.01;
 
-/* ******************************************************************
- *                  Definición de los tipos de datos
- * *****************************************************************/
-
-typedef struct NumeroComplejo {
-	double parteReal;
-	double parteImaginaria;
-} NumeroComplejo;
-
-typedef struct Resolucion {
-	int ancho;
-	int alto;
-} Resolucion;
-
-typedef struct Dimension {
-	double ancho;
-	double alto;
-} Dimension;
-
-typedef struct ConfiguracionConjunto {
-	Resolucion resolucion; // Resolución de la imagen a generar
-	Dimension dimension; // Tamaño de la porción de plano complejo
-	NumeroComplejo centro;
-	NumeroComplejo c;
-	char* nombreImagen;
-	bool salidaEstandar;
-} ConfiguracionConjunto;
 
 /* ******************************************************************
  *                             Manual
@@ -388,143 +362,19 @@ ConfiguracionConjunto* leerDatos(int argc, char const *argv[]) {
 }
 
 /* ******************************************************************
- *               Funciones de operacion con complejos
- * *****************************************************************/
-
-NumeroComplejo sumar(NumeroComplejo unNumero, NumeroComplejo otroNumero){
-	NumeroComplejo resultado;
-	resultado.parteReal = unNumero.parteReal + otroNumero.parteReal;
-	resultado.parteImaginaria = unNumero.parteImaginaria + otroNumero.parteImaginaria;
-	return resultado;
-}
-
-NumeroComplejo multiplicar(NumeroComplejo unNumero, NumeroComplejo otroNumero){
-	NumeroComplejo resultado;
-	resultado.parteReal = unNumero.parteReal * otroNumero.parteReal -
-						  unNumero.parteImaginaria * otroNumero.parteImaginaria;
-	resultado.parteImaginaria = unNumero.parteReal * otroNumero.parteImaginaria +
-								unNumero.parteImaginaria * otroNumero.parteReal;
-	return resultado;
-}
-
-double moduloAlCuadrado(NumeroComplejo unNumero){
-	return unNumero.parteImaginaria*unNumero.parteImaginaria
-			+ unNumero.parteReal*unNumero.parteReal;
-}
-
-
-/* ******************************************************************
  *                  Simula el Conjunto de Julia
  * *****************************************************************/
 
-unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
-    
-    NumeroComplejo iComplejo = numeroComplejo;
-    unsigned char i = 0;
-    while(i < 255 && moduloAlCuadrado(iComplejo) <= 4){
-        iComplejo = sumar(multiplicar(iComplejo, iComplejo),c);
-        i++;
-    }
-    return i;
-}
-
-NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, double anchoPixel, double altoPixel) {
-
-	NumeroComplejo numero;
-
-	/*Se incrementa el píxel teniendo en cuenta en cual se está*/
-
-	numero.parteReal = zInicio.parteReal + j*anchoPixel;
-	numero.parteImaginaria = zInicio.parteImaginaria - i*altoPixel;
-
-	return numero;
-}
-
-NumeroComplejo obtenerZInicio(ConfiguracionConjunto* configuracion) {
-
-	NumeroComplejo zInicio;
-	NumeroComplejo centro = configuracion->centro;
-
-	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
-
-	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
-	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
-
-	/*Me posiciono en la esquina superior izquierda con respecto al centro de la imagen*/
-
-	zInicio.parteReal = centro.parteReal - configuracion->dimension.ancho/2;
-	zInicio.parteImaginaria = centro.parteImaginaria + configuracion->dimension.alto/2;
-
-	double deltaAnchoPixel = anchoPixel/2;
-	double deltaAltoPixel = altoPixel/2;
-
-	/*Me centro en punto medio del píxel*/
-
-	zInicio.parteReal = zInicio.parteReal + deltaAnchoPixel;
-	zInicio.parteImaginaria = zInicio.parteImaginaria - deltaAltoPixel;
-
-	return zInicio;
-}
-
 void simularConjunto(ConfiguracionConjunto* configuracion) {
 
-	FILE* imagen;
+	Resolucion resolucion = configuracion->resolucion;
+	Dimension dimension = configuracion->dimension;
+	NumeroComplejo centro = configuracion->centro;
+	NumeroComplejo c = configuracion->c;
+	char* nombreImagen = configuracion->nombreImagen;
+	bool salidaEstandar = configuracion->salidaEstandar;
 
-    int anchoRes = configuracion->resolucion.ancho;
-    int altoRes = configuracion->resolucion.alto;
-
-    if (!configuracion->salidaEstandar) {
-
-        imagen = fopen(configuracion->nombreImagen, "w");
-
-        fprintf(imagen, "%s\n", HEADER_IMAGEN);
-        fprintf(imagen, "%d\n", anchoRes);
-        fprintf(imagen, "%d\n", altoRes);
-        fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
-
-    } else {
-
-        printf("%s\n", HEADER_IMAGEN);
-        printf("%d\n", anchoRes);
-        printf("%d\n", altoRes);
-        printf("%d\n", MAXIMA_INTENSIDAD_PIXEL);
-    }
-
-    int brillo;
-    NumeroComplejo complejoAsociadoAPixel;
-    NumeroComplejo c = configuracion->c;
-
-    NumeroComplejo zInicio = obtenerZInicio(configuracion);
-
-	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
-
-	double anchoPixel = configuracion->dimension.ancho/configuracion->resolucion.ancho;
-	double altoPixel = configuracion->dimension.alto/configuracion->resolucion.alto;
-
-    for (int i = 0; i < altoRes; i++) {
-
-    	for (int j = 0; j < anchoRes; j++) {
-
-    		complejoAsociadoAPixel = transformarPixel(i, j, zInicio, anchoPixel, altoPixel);
-    		brillo = calcularBrillo(complejoAsociadoAPixel, c);
-
-    		if (!configuracion->salidaEstandar) {
-                fprintf(imagen, "%d ", brillo);
-    		} else {
-                printf("%d ", brillo);
-    		}
-    	}
-
-    	if (!configuracion->salidaEstandar) {
-            fprintf(imagen, "%s\n", "");
-    	} else {
-    		printf("\n");
-    	}
-    }
-
-    if (!configuracion->salidaEstandar) {
-        fclose(imagen);
-    }
+	simularConjuntoJulia(resolucion, dimension, centro, c, nombreImagen, salidaEstandar);
 }
 
 /* ******************************************************************
@@ -558,3 +408,4 @@ int main(int argc, char const *argv[]) {
 	simulacionJulia(argc, argv);
 	return 0;
 }
+

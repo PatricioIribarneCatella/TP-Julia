@@ -3,6 +3,7 @@ CC = gcc
 CFLAGS = -Wall -Werror -pedantic -std=c99 -g
 BIN = $(filter-out $(EXEC).c, $(wildcard *.c))
 BINFILES = $(BIN:.c=.o)
+TESTSCRIPT=pruebas.sh
 
 all: main
 
@@ -14,5 +15,8 @@ main: $(BINFILES)  $(EXEC).c
 
 clean:
 	rm -f $(wildcard *.o) $(EXEC)
+
+pruebas: $(EXEC)
+	bash $(TESTSCRIPT)
 
 .PHONY: clean main
