@@ -70,19 +70,16 @@ void simularConjuntoJulia(Resolucion resolucion, Dimension dimension, NumeroComp
     if (!salidaEstandar) {
 
         imagen = fopen(nombreImagen, "w");
-
-        fprintf(imagen, "%s\n", HEADER_IMAGEN);
-        fprintf(imagen, "%d\n", anchoRes);
-        fprintf(imagen, "%d\n", altoRes);
-        fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
-
+        
     } else {
 
-        printf("%s\n", HEADER_IMAGEN);
-        printf("%d\n", anchoRes);
-        printf("%d\n", altoRes);
-        printf("%d\n", MAXIMA_INTENSIDAD_PIXEL);
+        imagen = stdout;
     }
+
+    fprintf(imagen, "%s\n", HEADER_IMAGEN);
+    fprintf(imagen, "%d\n", anchoRes);
+    fprintf(imagen, "%d\n", altoRes);
+    fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
 
     int brillo;
     NumeroComplejo complejoAsociadoAPixel;
@@ -101,22 +98,11 @@ void simularConjuntoJulia(Resolucion resolucion, Dimension dimension, NumeroComp
     		complejoAsociadoAPixel = transformarPixel(i, j, zInicio, anchoPixel, altoPixel);
     		brillo = calcularBrillo(complejoAsociadoAPixel, c);
 
-    		if (!salidaEstandar) {
-                fprintf(imagen, "%d ", brillo);
-    		} else {
-                printf("%d ", brillo);
-    		}
+            fprintf(imagen, "%d ", brillo);
     	}
 
-    	if (!salidaEstandar) {
-            fprintf(imagen, "%s\n", "");
-    	} else {
-    		printf("\n");
-    	}
+    	fprintf(imagen, "%s\n", "");
     }
 
-    if (!salidaEstandar) {
-        fclose(imagen);
-    }
+    fclose(imagen);
 }
-
