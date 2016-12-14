@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "tiposDeDatos.h"
 
-void simularConjuntoJulia(Resolucion resolucion, Dimension dimension, NumeroComplejo centro, NumeroComplejo c, char* nombreImagen, bool salidaEstandar);
+void simularConjuntoJulia(Resolucion resolucion, Dimension dimension, NumeroComplejo centro, NumeroComplejo c, FILE* imagen);
 
 #endif //SIMULACIONJULIA_H
-

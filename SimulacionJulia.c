@@ -12,18 +12,20 @@
  *            Funciones para simular el conjunto de Julia
  * *****************************************************************/
 
-unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
-    
-    NumeroComplejo iComplejo = numeroComplejo;
-    unsigned char i = 0;
-    while(i < 255 && moduloAlCuadrado(iComplejo) <= 4){
-        iComplejo = sumar(multiplicar(iComplejo, iComplejo),c);
-        i++;
-    }
-    return i;
+static unsigned char calcularBrillo(NumeroComplejo numeroComplejo, NumeroComplejo c){
+	
+	NumeroComplejo iComplejo = numeroComplejo;
+	unsigned char i = 0;
+
+	while(i < 255 && moduloAlCuadrado(iComplejo) <= 4){
+		iComplejo = sumar(multiplicar(iComplejo, iComplejo),c);
+		i++;
+	}
+
+	return i;
 }
 
-NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, double anchoPixel, double altoPixel) {
+static NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, double anchoPixel, double altoPixel) {
 
 	NumeroComplejo numero;
 
@@ -35,7 +37,7 @@ NumeroComplejo transformarPixel(int i, int j, NumeroComplejo zInicio, double anc
 	return numero;
 }
 
-NumeroComplejo obtenerZInicio(NumeroComplejo centro, Dimension dimension, Resolucion resolucion) {
+static NumeroComplejo obtenerZInicio(NumeroComplejo centro, Dimension dimension, Resolucion resolucion) {
 
 	NumeroComplejo zInicio;
 
@@ -60,49 +62,38 @@ NumeroComplejo obtenerZInicio(NumeroComplejo centro, Dimension dimension, Resolu
 	return zInicio;
 }
 
-void simularConjuntoJulia(Resolucion resolucion, Dimension dimension, NumeroComplejo centro, NumeroComplejo c, char* nombreImagen, bool salidaEstandar) {
+void simularConjuntoJulia(Resolucion resolucion, Dimension dimension, NumeroComplejo centro, NumeroComplejo c, FILE* imagen) {
 
-	FILE* imagen;
+	int anchoRes = resolucion.ancho;
+	int altoRes = resolucion.alto;
 
-    int anchoRes = resolucion.ancho;
-    int altoRes = resolucion.alto;
+	fprintf(imagen, "%s\n", HEADER_IMAGEN);
+	fprintf(imagen, "%d\n", anchoRes);
+	fprintf(imagen, "%d\n", altoRes);
+	fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
 
-    if (!salidaEstandar) {
+	int brillo;
+	NumeroComplejo complejoAsociadoAPixel;
 
-        imagen = fopen(nombreImagen, "w");
-        
-    } else {
-
-        imagen = stdout;
-    }
-
-    fprintf(imagen, "%s\n", HEADER_IMAGEN);
-    fprintf(imagen, "%d\n", anchoRes);
-    fprintf(imagen, "%d\n", altoRes);
-    fprintf(imagen, "%d\n", MAXIMA_INTENSIDAD_PIXEL);
-
-    int brillo;
-    NumeroComplejo complejoAsociadoAPixel;
-
-    NumeroComplejo zInicio = obtenerZInicio(centro, dimension, resolucion);
+	NumeroComplejo zInicio = obtenerZInicio(centro, dimension, resolucion);
 
 	/*Calculo el ancho del píxel en función del tamaño de la imagen y la resolución*/
 
 	double anchoPixel = dimension.ancho/resolucion.ancho;
 	double altoPixel = dimension.alto/resolucion.alto;
 
-    for (int i = 0; i < altoRes; i++) {
+	for (int i = 0; i < altoRes; i++) {
 
-    	for (int j = 0; j < anchoRes; j++) {
+		for (int j = 0; j < anchoRes; j++) {
 
-    		complejoAsociadoAPixel = transformarPixel(i, j, zInicio, anchoPixel, altoPixel);
-    		brillo = calcularBrillo(complejoAsociadoAPixel, c);
+			complejoAsociadoAPixel = transformarPixel(i, j, zInicio, anchoPixel, altoPixel);
+			brillo = calcularBrillo(complejoAsociadoAPixel, c);
 
-            fprintf(imagen, "%d ", brillo);
-    	}
+			fprintf(imagen, "%d ", brillo);
+		}
 
-    	fprintf(imagen, "%s\n", "");
-    }
+		fprintf(imagen, "%s\n", "");
+	}
 
-    fclose(imagen);
+	fclose(imagen);
 }

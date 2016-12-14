@@ -1,24 +1,27 @@
 #include <stdlib.h>
 #include "NumeroComplejo.h"
 
-NumeroComplejo sumar(NumeroComplejo unNumero, NumeroComplejo otroNumero){
+NumeroComplejo sumar(NumeroComplejo z1, NumeroComplejo z2) {
+
 	NumeroComplejo resultado;
-	resultado.parteReal = unNumero.parteReal + otroNumero.parteReal;
-	resultado.parteImaginaria = unNumero.parteImaginaria + otroNumero.parteImaginaria;
+	resultado.parteReal = z1.parteReal + z2.parteReal;
+	resultado.parteImaginaria = z1.parteImaginaria + z2.parteImaginaria;
 	return resultado;
 }
 
-NumeroComplejo multiplicar(NumeroComplejo unNumero, NumeroComplejo otroNumero){
+NumeroComplejo multiplicar(NumeroComplejo z1, NumeroComplejo z2) {
+
 	NumeroComplejo resultado;
-	resultado.parteReal = unNumero.parteReal * otroNumero.parteReal -
-						  unNumero.parteImaginaria * otroNumero.parteImaginaria;
-	resultado.parteImaginaria = unNumero.parteReal * otroNumero.parteImaginaria +
-								unNumero.parteImaginaria * otroNumero.parteReal;
+	resultado.parteReal = z1.parteReal * z2.parteReal -
+						  z1.parteImaginaria * z2.parteImaginaria;
+	resultado.parteImaginaria = z1.parteReal * z2.parteImaginaria +
+								z1.parteImaginaria * z2.parteReal;
 	return resultado;
 }
 
-double moduloAlCuadrado(NumeroComplejo unNumero){
-	return unNumero.parteImaginaria*unNumero.parteImaginaria
-			+ unNumero.parteReal*unNumero.parteReal;
+double moduloAlCuadrado(NumeroComplejo z1) {
+	
+	return z1.parteImaginaria * z1.parteImaginaria
+			+ z1.parteReal * z1.parteReal;
 }
 
