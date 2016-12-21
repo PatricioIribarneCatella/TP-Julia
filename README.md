@@ -1,6 +1,6 @@
 # TP-Julia
 
-Simulación de los conjuntos de Julia
+Simulación de los conjuntos de Julia (Organización de Computadoras)
 
 **Compilación**
 
