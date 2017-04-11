@@ -26,22 +26,28 @@
 
 # Prueba 9: Imagen default
 ./tp0 -o imagenDefault.pgm
+mv imagenDefault.pgm imagenes/
 
 # Prueba 10: Imagen con parámetros [r: 1000x1000]
 ./tp0 -r 1000x1000 -o imagen1000x1000.pgm
+mv imagen1000x1000.pgm imagenes/
 
 # Prueba 11: Imagen con parámetros [r: 1000x1000, C: -0.75+0.0i, w(ancho): 3, H(alto): 3]
 ./tp0 -r 1000x1000 -C -0.75+0.0i -w 3.0 -H 3.0 -o imagen1.pgm
+mv imagen1.pgm imagenes/
 
 # Prueba 12: Imagen con parámetros [r: 1000x1000, C: -0.29799-0.65705i]
 ./tp0 -r 1000x1000 -C -0.29799-0.65705i -o imagen2.pgm
+mv imagen2.pgm imagenes/
 
 # Prueba 13: Imagen con parámetros [r: 1000x1000, C: -0.20722+0.64840i]
 ./tp0 -r 1000x1000 -C -0.20722+0.64840i -o imagen3.pgm
+mv imagen3.pgm imagenes/
 
 # Prueba 14: Imagen con parámetros [r: 1000x1000, C: -0.45793+0.52736i]
 ./tp0 -r 1000x1000 -C -0.45793+0.52736i -o imagen4.pgm
+mv imagen4.pgm imagenes/
 
 # Prueba 15: Imagen con parámetros [r: 1000x1000, C: -1.75473+0i]
 ./tp0 -r 1000x1000 -C -1.75473+0i -o imagen5.pgm
-
+mv imagen5.pgm imagenes/
