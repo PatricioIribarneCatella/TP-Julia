@@ -19,5 +19,6 @@ clean:
 pruebas: $(EXEC)
 	mkdir imagenes
 	bash $(TESTSCRIPT)
+	mv *.pgm imagenes/
 
 .PHONY: clean main
