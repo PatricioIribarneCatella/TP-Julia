@@ -1,4 +1,4 @@
-EXEC = tp0
+EXEC = main
 CC = gcc
 CFLAGS = -Wall -Werror -pedantic -std=c99 -g
 BIN = $(filter-out $(EXEC).c, $(wildcard *.c))
