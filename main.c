@@ -25,11 +25,10 @@ static void simularConjunto(ConfiguracionConjunto* configuracion) {
 	NumeroComplejo centro = configuracion->centro;
 	NumeroComplejo c = configuracion->c;
 	char* nombreImagen = configuracion->nombreImagen;
-	bool salidaEstandar = configuracion->salidaEstandar;
 
 	FILE* imagen;
 
-	if (!salidaEstandar) {
+	if (!(configuracion->salidaEstandar)) {
 
 		imagen = fopen(nombreImagen, "w");
         
@@ -51,9 +50,9 @@ static void simulacionJulia(int argc, char const *argv[]) {
 
 		printf("%s\n", "Version: 1.0");
 		printf("Integrantes:\n" 
-					"\t Mauro Toscano Gonella\n"
-					"\t Patricio Iribarne Catella\n"
-					"\t Marcos Vrljicak\n");
+			"\t Mauro Toscano Gonella\n"
+			"\t Patricio Iribarne Catella\n"
+			"\t Marcos Vrljicak\n");
 
 	} else {
 
@@ -62,6 +61,7 @@ static void simulacionJulia(int argc, char const *argv[]) {
 		if (!configuracion) return;
 
 		simularConjunto(configuracion);
+		
 		destruirConfiguracion(configuracion);
 	}
 }
