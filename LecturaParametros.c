@@ -34,7 +34,7 @@ const double C_IMAGINARIO_DEFAULT = -0.01;
 
 static void printUso() {
 	
-	printf("Usage: ./tp0 [options]\n"
+	printf("Usage: ./main [options]\n"
 				   "-v [version]        shows the program's version (do not use it with the other options)\n"
 				   "-r [resolution]     specify resolution\n"
 				   "-c [complex number] specify center\n"

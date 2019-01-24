@@ -14,7 +14,7 @@ main: $(BINFILES)  $(EXEC).c
 	$(CC) $(CFLAGS) $(BINFILES) $(EXEC).c -o $(EXEC)
 
 clean:
-	rm -f $(wildcard *.o) $(EXEC) -r imagenes/
+	rm -f $(wildcard *.o) $(EXEC) *.pgm -r imagenes/
 
 pruebas: $(EXEC)
 	mkdir imagenes
