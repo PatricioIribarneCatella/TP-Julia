@@ -4,14 +4,25 @@ Simulación de los conjuntos de Julia (Organización de Computadoras)
 
 **Compilación**
 
-$ make clean
+```bash
+ $ make clean
 
-$ make
+ $ make
+```
 
 **Ejecución**
 
-$ ./tp0 -r ANCHOxALTO -c a+bi -C c+di -w AnchoRegionPlanoComplejo -H AltoRegionPlanoComplejo -o nombreImagen.pgm
+```bash
+ $ ./main -o (nombreImagen.pgm, stdout: -) [-r ANCHOxALTO |
+					    -c a+bi |
+					    -C c+di | 
+					    -w AnchoRegionPlanoComplejo |
+					    -H AltoRegionPlanoComplejo] 
+```
 
 **Pruebas**
 
-$ make pruebas
+```bash
+ $ make pruebas
+```
+
